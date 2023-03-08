@@ -16,6 +16,7 @@ export default function Viewport(props) {
 
     return (
         <div className="App wrapper">
+            
             <SideBar toggle={toggleSidebar} isOpen={sidebarIsOpen} />
             <Container fluid className={classNames("content", { "is-open": sidebarIsOpen })}>
                 <Topbar toggleSidebar={toggleSidebar} sidebarIsOpen={sidebarIsOpen} />
