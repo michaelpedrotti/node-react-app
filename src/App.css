@@ -25,7 +25,7 @@
   .sidebar {
     min-width: 250px;
     max-width: 250px;
-    background: #7386d5;
+    background: #b2b4bc;
     color: #fff;
     margin-left: -250px;
     transition: all 0.5s;
@@ -37,7 +37,7 @@
   }
   
   .sidebar-header {
-    background: #6d7fcc;
+    background: #5d5e64;
   }
   
   .sidebar-header h3 {
@@ -101,7 +101,6 @@
       CONTENT STYLE
   ----------------------------------------------------- */
   .content {
-    padding: 20px;
     margin-left: 0;
     height: 100vh;
   }

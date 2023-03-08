@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAlignLeft } from "@fortawesome/free-solid-svg-icons";
 import {
+    NavbarBrand,
   Navbar,
   Button,
   NavbarToggler,
@@ -17,10 +18,12 @@ const Topbar = ({ toggleSidebar }) => {
   const toggleTopbar = () => setTopbarOpen(!topbarIsOpen);
 
   return (
+
+
     <Navbar
       color="light"
       light
-      className="navbar shadow-sm p-3 mb-5 bg-white rounded"
+      className="navbar shadow-sm p-3 mb-5"
       expand="md"
     >
       <Button color="info" onClick={toggleSidebar}>
