@@ -1,4 +1,6 @@
+import { useContext } from "react";
 import { Navigate } from "react-router-dom";
+import { SessionContext } from "../contexts/session";
 
 export const isAuthenticated = () => true;
 
@@ -7,5 +9,7 @@ export const isAuthenticated = () => true;
  */
 export const AuthenticatedRoute = ({ children, redirectTo }) => {
     
-    return isAuthenticated() ? children : <Navigate to={redirectTo} />;
+    const [ session ] = useContext(SessionContext);
+
+    return session ? children : <Navigate to={redirectTo} />;
 }

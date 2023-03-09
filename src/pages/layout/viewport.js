@@ -21,7 +21,6 @@ export default function Viewport(props) {
                 <Topbar toggleSidebar={toggleSidebar} sidebarIsOpen={sidebarIsOpen} />
                 {props.breadcrumbs && <Breadcrumb listTag="div">
                         { props.breadcrumbs.map(([name, link]) => {
-
                             return(<BreadcrumbItem key={`BreadcrumbItem${name}`} href={link || '#'} tag="a">{ name }</BreadcrumbItem>)
                         })}
                     </Breadcrumb>
