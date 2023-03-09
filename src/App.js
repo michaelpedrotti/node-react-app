@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { UnauthorizedError, ForbiddenError, NotFoundError  } from "./pages/error";
-import { HomeIndex } from "./pages/home";
-import { LoginIndex } from "./pages/auth";
+import { HomeIndex, HomeLayout } from "./pages/home";
+import { AuthLogin } from "./pages/auth";
 import { UserLayout, UserIndex, UserShow, UserEdit, UserNew } from "./pages/user";
 import { ProfileLayout, ProfileIndex, ProfileShow, ProfileEdit, ProfileNew } from "./pages/profile";
 import { PermissionLayout, PermissionIndex, PermissionShow, PermissionEdit, PermissionNew } from "./pages/permission";
@@ -20,9 +20,11 @@ export default function App() {
               {/* Private pages */}
               <Route path="/" element={  
                 <AuthenticatedRoute redirectTo="/unauthorized">
-                    <HomeIndex />
+                    <HomeLayout />
                 </AuthenticatedRoute>
-              } />
+              }>
+                <Route index element={<HomeIndex />} />
+              </Route>
 
               {/* Private user pages */}
               <Route path="/user" element={
@@ -67,7 +69,7 @@ export default function App() {
               </Route>
               
               {/* Public pages */}
-              <Route path="/login" element={<LoginIndex />} />
+              <Route path="/login" element={<AuthLogin />} />
               <Route path="/redirect" element={ <Navigate to="/login" /> } />
 
               {/* Public errors pages */}

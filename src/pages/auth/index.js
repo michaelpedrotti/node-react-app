@@ -9,7 +9,7 @@ import AuthService from "../../services/auth";
  * @link https://j19ly.csb.app/
  * @link https://codesandbox.io/s/reactstrap-login-j19ly
  */
-export function LoginIndex(){
+export function AuthLogin(){
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
