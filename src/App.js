@@ -9,76 +9,79 @@ import { SessionContextProvider } from "./contexts/session"
 import { AuthenticatedRoute } from "./middlewares/authentication";
 import { AuthorizatedRoute } from "./middlewares/authorization";
 import "./App.css";
+import { ErrorContextProvider } from "./contexts/error";
 
 export default function App() {
 
   return (
     <SessionContextProvider>
-      <BrowserRouter>
-          <Routes>
-              
-              {/* Private pages */}
-              <Route path="/" element={  
-                <AuthenticatedRoute redirectTo="/unauthorized">
-                    <HomeLayout />
-                </AuthenticatedRoute>
-              }>
-                <Route index element={<HomeIndex />} />
-              </Route>
+      <ErrorContextProvider>
+        <BrowserRouter>
+            <Routes>
+                
+                {/* Private pages */}
+                <Route path="/" element={  
+                  <AuthenticatedRoute>
+                      <HomeLayout />
+                  </AuthenticatedRoute>
+                }>
+                  <Route index element={<HomeIndex />} />
+                </Route>
 
-              {/* Private user pages */}
-              <Route path="/user" element={
-                <AuthenticatedRoute redirectTo="/unauthorized">
-                  <AuthorizatedRoute redirectTo="/forbidden">
-                    <UserLayout />
-                  </AuthorizatedRoute>
-                </AuthenticatedRoute>
-              }>
-                <Route index element={<UserIndex />} />
-                <Route path=":id" element={<UserShow />} /> 
-                <Route path=":id/edit" element={<UserEdit />} />
-                <Route path="new" element={<UserNew />} />
-              </Route>
+                {/* Private user pages */}
+                <Route path="/user" element={
+                  <AuthenticatedRoute>
+                    <AuthorizatedRoute>
+                      <UserLayout />
+                    </AuthorizatedRoute>
+                  </AuthenticatedRoute>
+                }>
+                  <Route index element={<UserIndex />} />
+                  <Route path=":id" element={<UserShow />} /> 
+                  <Route path=":id/edit" element={<UserEdit />} />
+                  <Route path="new" element={<UserNew />} />
+                </Route>
 
-              {/* Private profile pages */}
-              <Route path="/profile" element={
-                <AuthenticatedRoute redirectTo="/unauthorized">
-                  <AuthorizatedRoute redirectTo="/forbidden">
-                    <ProfileLayout />
-                  </AuthorizatedRoute>
-                </AuthenticatedRoute>
-              }>
-                <Route index element={<ProfileIndex />} />
-                <Route path=":id" element={<ProfileShow />} /> 
-                <Route path=":id/edit" element={<ProfileEdit />} />
-                <Route path="new" element={<ProfileNew />} />
-              </Route>
+                {/* Private profile pages */}
+                <Route path="/profile" element={
+                  <AuthenticatedRoute>
+                    <AuthorizatedRoute>
+                      <ProfileLayout />
+                    </AuthorizatedRoute>
+                  </AuthenticatedRoute>
+                }>
+                  <Route index element={<ProfileIndex />} />
+                  <Route path=":id" element={<ProfileShow />} /> 
+                  <Route path=":id/edit" element={<ProfileEdit />} />
+                  <Route path="new" element={<ProfileNew />} />
+                </Route>
 
-              {/* Private profile pages */}
-              <Route path="/permission" element={
-                <AuthenticatedRoute redirectTo="/unauthorized">
-                  <AuthorizatedRoute redirectTo="/forbidden">
-                    <PermissionLayout />
-                  </AuthorizatedRoute> 
-                </AuthenticatedRoute>
-              }>
-                <Route index element={<PermissionIndex />} />
-                <Route path=":id" element={<PermissionShow />} /> 
-                <Route path=":id/edit" element={<PermissionEdit />} />
-                <Route path="new" element={<PermissionNew />} />
-              </Route>
-              
-              {/* Public pages */}
-              <Route path="/login" element={<AuthLogin />} />
-              <Route path="/redirect" element={ <Navigate to="/login" /> } />
+                {/* Private profile pages */}
+                <Route path="/permission" element={
+                  <AuthenticatedRoute>
+                    <AuthorizatedRoute>
+                      <PermissionLayout />
+                    </AuthorizatedRoute> 
+                  </AuthenticatedRoute>
+                }>
+                  <Route index element={<PermissionIndex />} />
+                  <Route path=":id" element={<PermissionShow />} /> 
+                  <Route path=":id/edit" element={<PermissionEdit />} />
+                  <Route path="new" element={<PermissionNew />} />
+                </Route>
+                
+                {/* Public pages */}
+                <Route path="/login" element={<AuthLogin />} />
+                <Route path="/redirect" element={ <Navigate to="/login" /> } />
 
-              {/* Public errors pages */}
-              <Route path="/unauthorized" element={<UnauthorizedError />} />
-              <Route path="/forbidden" element={<ForbiddenError />} />
-              <Route path="*" element={<NotFoundError />} />
-              
-          </Routes>
-      </BrowserRouter>
+                {/* Public errors pages */}
+                <Route path="/unauthorized" element={<UnauthorizedError />} />
+                <Route path="/forbidden" element={<ForbiddenError />} />
+                <Route path="*" element={<NotFoundError />} />
+                
+            </Routes>
+        </BrowserRouter>
+      </ErrorContextProvider>
     </SessionContextProvider>
   );
 }

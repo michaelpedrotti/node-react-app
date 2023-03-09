@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { Navigate } from "react-router-dom";
 import { SessionContext } from "../contexts/session";
+import { ErrorContext } from "../contexts/error";
 
 export const isAuthenticated = () => true;
 
@@ -10,6 +11,16 @@ export const isAuthenticated = () => true;
 export const AuthenticatedRoute = ({ children, redirectTo }) => {
     
     const [ session ] = useContext(SessionContext);
+    const [, setError ] = useContext(ErrorContext);
 
-    return session ? children : <Navigate to={redirectTo} />;
+    if(session) {
+
+        return children;
+    }
+    else {
+
+        setError({level:'danger', message: 'None Auth'});
+
+        return <Navigate to={redirectTo || '/login'} />;
+    }
 }

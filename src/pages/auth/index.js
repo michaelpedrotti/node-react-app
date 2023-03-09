@@ -1,7 +1,8 @@
 import { useState, useContext } from "react";
 import { Navigate } from "react-router-dom";
-import { Container, Row, Col, Card, CardBody, Button, Form, FormGroup, Label, Input } from "reactstrap";
+import { Alert, Container, Row, Col, Card, CardBody, Button, Form, FormGroup, Label, Input } from "reactstrap";
 import { SessionContext } from "../../contexts/session";
+import { ErrorContext } from "../../contexts/error";
 import AuthService from "../../services/auth";
 
 
@@ -14,9 +15,9 @@ export function AuthLogin(){
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoggedin, setLoggedin] = useState(false);
-  const [error, setError] = useState("");
   const [, setSession ] = useContext(SessionContext);
-
+  const [ error, setError ] = useContext(ErrorContext);
+  
   const onSubmit = (e) => {
 
     e.preventDefault();
@@ -27,7 +28,7 @@ export function AuthLogin(){
 
       if(res.error) {
         
-        setError(res.message || "Internal Error Server");
+        setError({level: "warning", message: res.message || "Internal Error Server"});
       }
       else {
 
@@ -36,7 +37,7 @@ export function AuthLogin(){
         service.setToken(token).getFullAccess((res) => {
 
           if(res.error) {
-            setError(res.message || "Internal Error Server");
+            setError({level: "warning", message: res.message || "Internal Error Server"});
           }
           else {
 
@@ -58,7 +59,11 @@ export function AuthLogin(){
           <Card className="mb-5">
             <CardBody>
               
-              { error && <div>{error}</div>}
+              { error && <Alert color="warning">
+                  <h4 className="alert-heading">{ error.code }</h4>
+                  <p>{ error.message }</p>
+                </Alert>
+              }
                 
             </CardBody>
           </Card>

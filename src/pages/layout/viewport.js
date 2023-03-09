@@ -1,4 +1,4 @@
-import {  Container, Breadcrumb, BreadcrumbItem, Card, CardHeader, CardBody } from "reactstrap";
+import {  Container, Breadcrumb, BreadcrumbItem } from "reactstrap";
 import classNames from "classnames";
 import React, { useState } from "react";
 import Topbar from "./topbar";
@@ -25,14 +25,9 @@ export default function Viewport(props) {
                         })}
                     </Breadcrumb>
                 }
-                <Card  className="my-2">
-                    <CardHeader>
-                        Header
-                    </CardHeader>
-                    <CardBody>
-                        {props.children}
-                    </CardBody>
-                </Card>
+                <div>
+                    {props.children}
+                </div>
             </Container>
         </div>
     );
