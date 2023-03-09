@@ -1,7 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUsers, faQuestion, faImage } from "@fortawesome/free-solid-svg-icons";
-import { NavLink, NavItem, Nav } from "reactstrap";
+import { NavLink, NavItem, Nav, NavbarText } from "reactstrap";
 import classNames from "classnames";
 import { Link } from "react-router-dom";
 
@@ -12,11 +12,9 @@ const SideBar = ({ isOpen, toggle }) => (
         <h4>React</h4>
       </div>
       <Nav vertical>
-       <NavItem className="nav-title">
-          <NavLink className="nav-title">
-            Disabled Link
-            </NavLink>
-        </NavItem>
+        <NavbarText style={{'backgroundColor': '#CCCCCC'}}>
+            <div style={{'marginLeft': '1rem'}}>Admin</div>
+        </NavbarText>
         <NavItem>
           <NavLink tag={Link} to={"/user"}>
             <FontAwesomeIcon icon={faUsers} className="mr-2" /> User

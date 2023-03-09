@@ -1,24 +1,24 @@
 import { Outlet, useParams } from "react-router-dom";
 import Viewport from '../layout/viewport';
 
-export function UserLayout() {
+export function PermissionLayout() {
     
     return (
-        <Viewport breadcrumbs={[['Admin'], ['User']]}>
+        <Viewport breadcrumbs={[['Admin'], ['Permission']]}>
             <Outlet />
         </Viewport>
     );
 }
 
-export function UserIndex(){
+export function PermissionIndex(){
 
     return (
 
-        <div>User.Index</div>
+        <div>Permission.Index</div>
     );
 }
 
-export function UserShow(){
+export function PermissionShow(){
 
     const params = useParams();
 
@@ -28,7 +28,7 @@ export function UserShow(){
     );
 }
 
-export function UserEdit(){
+export function PermissionEdit(){
 
     const params = useParams();
 
@@ -38,7 +38,7 @@ export function UserEdit(){
     );
 }
 
-export function UserNew(){
+export function PermissionNew(){
 
     return (
 

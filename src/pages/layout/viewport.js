@@ -16,16 +16,16 @@ export default function Viewport(props) {
 
     return (
         <div className="App wrapper">
-            
             <SideBar toggle={toggleSidebar} isOpen={sidebarIsOpen} />
             <Container fluid className={classNames("content", { "is-open": sidebarIsOpen })}>
                 <Topbar toggleSidebar={toggleSidebar} sidebarIsOpen={sidebarIsOpen} />
-                <Breadcrumb listTag="div">
-                    <BreadcrumbItem href="#" tag="a">Home</BreadcrumbItem>
-                    <BreadcrumbItem href="#" tag="a">Library</BreadcrumbItem>
-                    <BreadcrumbItem href="#" tag="a">Data</BreadcrumbItem>
-                    <BreadcrumbItem active tag="span">Bootstrap</BreadcrumbItem>
-                </Breadcrumb>
+                {props.breadcrumbs && <Breadcrumb listTag="div">
+                        { props.breadcrumbs.map(([name, link]) => {
+
+                            return(<BreadcrumbItem key={`BreadcrumbItem${name}`} href={link || '#'} tag="a">{ name }</BreadcrumbItem>)
+                        })}
+                    </Breadcrumb>
+                }
                 <Card  className="my-2">
                     <CardHeader>
                         Header

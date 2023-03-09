@@ -1,24 +1,24 @@
 import { Outlet, useParams } from "react-router-dom";
 import Viewport from '../layout/viewport';
 
-export function UserLayout() {
+export function ProfileLayout() {
     
     return (
-        <Viewport breadcrumbs={[['Admin'], ['User']]}>
+        <Viewport breadcrumbs={[['Admin'], ['Profile']]}>
             <Outlet />
         </Viewport>
     );
 }
 
-export function UserIndex(){
+export function ProfileIndex(){
 
     return (
 
-        <div>User.Index</div>
+        <div>Profile.Index</div>
     );
 }
 
-export function UserShow(){
+export function ProfileShow(){
 
     const params = useParams();
 
@@ -28,7 +28,7 @@ export function UserShow(){
     );
 }
 
-export function UserEdit(){
+export function ProfileEdit(){
 
     const params = useParams();
 
@@ -38,7 +38,7 @@ export function UserEdit(){
     );
 }
 
-export function UserNew(){
+export function ProfileNew(){
 
     return (
 
