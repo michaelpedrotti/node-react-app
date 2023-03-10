@@ -15,9 +15,9 @@ export default class UserService {
         return this;
     }
 
-    paginate(callback = () => {}){
+    paginate(filter = {}, callback = () => {}){
 
-        fetch("http://localhost:8080/user", {
+        fetch("http://localhost:8080/user?" + new URLSearchParams(filter).toString(), {
             method: "GET",
             headers: { 
                 "Content-Type": "application/json",
@@ -102,7 +102,19 @@ export default class UserService {
         .catch(console.error)
     }
 
+    delete(id = 0, callback = () => {}){
 
+        fetch("http://localhost:8080/user/" + id, {
+            method: "DELETE",
+            headers: { 
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + this._token
+            }
+        })
+        .then(res => res.json())
+        .then(callback)
+        .catch(console.error)
+    }
 
     /**
      * 

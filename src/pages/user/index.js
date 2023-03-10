@@ -113,7 +113,7 @@ export function UserForm({ service, action }){
             }
         }
 
-    }, []);
+    }, [id, service]);
 
     return(
 
@@ -142,7 +142,7 @@ export function UserForm({ service, action }){
                                     <option value="">Select</option>
                                     { profileOptions.map(option => {
         
-                                        return <option selected={data['profile_id'] == option.id} key={`profileOption${option.id}`} value={option.id}>{option.name}</option>
+                                        return <option selected={Number(data['profile_id']) === Number(option.id)} key={`profileOption${option.id}`} value={option.id}>{option.name}</option>
                                     })}  
                                 </Input>
                                 <FormFeedback>{fieldErrors['profile_id'] || ""}</FormFeedback>
@@ -163,10 +163,12 @@ export function UserIndex() {
     const [ session ] = useContext(SessionContext);
     const service = UserService.newInstance(session.token);
     const [rows, setRows] = useState([]);
-    const [filter] = useState({});
+    const [filter, setFilter] = useState({});
     const [selected, setSelected] = useState(0);
+    const [pages, setPages] = useState(0);
     const navigate = useNavigate();
-    const onNew = () => {
+
+    const onCreate = () => {
 
         navigate('/user/new');        
     };
@@ -181,7 +183,31 @@ export function UserIndex() {
             alert("Select one record");  
         } 
     };
+    const onDelete = () => {
 
+        if(selected > 0){
+
+            if(window.confirm('Are you sure ?')){
+
+                service.delete(selected, (res) => {
+
+                    if(res.error){
+
+                        alert('ERROR ' + res.message);
+                    }
+                    else {
+
+                        setFilter({});
+                    }
+
+                });
+            }
+        }
+        else {
+
+            alert("Select one record");  
+        }
+    };
     const onShow = () => {
 
         if(selected > 0){
@@ -193,15 +219,29 @@ export function UserIndex() {
             alert("Select one record");  
         } 
     };
+    // const onFilter = (e) => {
+
+    //     e.preventDefault();
+
+    // };
+
+    const onPaginate = (page) => {
+
+        setFilter(current => {  return { ...current, offset: ( page * 10 ), limit: 10 } });
+    };
     
     useEffect(()=> {
 
-        service.paginate((res) => {
+        service.paginate(filter, (res) => {
 
             if(res.error){
                 alert(res.message);
             }
             else {
+
+                setPages(Math.ceil(res.count / 10));
+
+                console.log('pages', pages);
                 setRows(res.rows);
             }
         });
@@ -214,9 +254,9 @@ export function UserIndex() {
             <CardHeader>
                 <div className="d-grid gap-2 d-md-flex justify-content-md-end">
                     <Button color="secundary" onClick={onShow}>Show</Button>
-                    <Button color="success" onClick={onNew}>Add</Button>
+                    <Button color="success" onClick={onCreate}>Add</Button>
                     <Button color="primary" onClick={onEdit}>Edit</Button>
-                    <Button color="danger" onClick={() => navigate('/user/new')}>Remove</Button>
+                    <Button color="danger" onClick={onDelete}>Remove</Button>
                 </div>
             </CardHeader>
             <CardBody>
@@ -243,25 +283,19 @@ export function UserIndex() {
                             <Col lg="4">dafasd</Col>
                             <Col lg="8">
                                 <Pagination>
-                                    <PaginationItem>
+                                    <PaginationItem disabled={ pages === 1 }>
                                         <PaginationLink first href="#" />
                                     </PaginationItem>
-                                    <PaginationItem>
+                                    <PaginationItem disabled={ pages === 1 }>
                                         <PaginationLink  href="#" previous/>
                                     </PaginationItem>
                                     <PaginationItem>
-                                        <PaginationLink href="#">1</PaginationLink>
+                                        {[...Array(pages)].map((e, i) => <PaginationLink href="javascript:void(0)" onClick={e => onPaginate(i + 1)}>{i + 1}</PaginationLink>)}
                                     </PaginationItem>
-                                    <PaginationItem>
-                                        <PaginationLink href="#">2</PaginationLink>
-                                    </PaginationItem>
-                                    <PaginationItem>
-                                        <PaginationLink href="#">3</PaginationLink>
-                                    </PaginationItem>
-                                    <PaginationItem>
+                                    <PaginationItem  disabled={ pages === 1 }>
                                         <PaginationLink href="#" next />
                                     </PaginationItem>
-                                    <PaginationItem>
+                                    <PaginationItem disabled={ pages === 1 }>
                                         <PaginationLink href="#" last />
                                     </PaginationItem>
                                 </Pagination>
@@ -286,7 +320,6 @@ export function UserShow(){
 
     const onBack = (e) => {
         
-
         e.preventDefault();
 
         navigate('/user');  
@@ -294,24 +327,19 @@ export function UserShow(){
 
     useEffect(() => {
 
-        if(service){
+        service.show(id, (res) => {
+            
+            if(res.error){
 
-            service.show(id, (res) => {
                 
-                console.log('res', res);
+            }
+            else {
 
-                if(res.error){
-    
-                    
-                }
-                else {
-    
-                    setData(res.data);
-                }
-            });
-        }
+                setData(res.data);
+            }
+        });
 
-    }, []);
+    }, [id, service]);
 
     return(
 
