@@ -15,11 +15,13 @@ export function UserLayout() {
     );
 }
 
-export function UserForm({ service }){
+export function UserForm({ service, action }){
 
     const [profileOptions, setProfileOptions] = useState([]);
     const [fieldErrors, setFieldErrors] = useState({});
+    const [data, setData] = useState({});
     const navigate = useNavigate();
+    const { id  } = useParams();
 
     const onSubmit = (e) => {
 
@@ -32,9 +34,8 @@ export function UserForm({ service }){
             body[key] = val;
         }
 
-        service.store(body, (res) => {
+        const callback = (res) => {
 
-            
             if(res.error){
 
                 if(res.fields){
@@ -53,12 +54,19 @@ export function UserForm({ service }){
             }
             else {
 
-                alert(res.message + "\n" + res.password);
-
-                e.target.reset();
-                setFieldErrors({});
+                // Flash message
+                navigate('/user');  
             }
-        });
+        };
+
+        if(id){
+
+            service.update(body, id, callback);
+        }
+        else {
+
+            service.store(body,  callback);
+        }
     };
 
     const onCancel = (e) => {
@@ -72,17 +80,37 @@ export function UserForm({ service }){
 
         if(service){
 
-            service.new((res) => {
-                // @todo: Helper JSON unpackage
-                if(res.error){
-    
-                    alert(res.message);
-                }
-                else {
-    
-                    setProfileOptions(res.form.profiles);
-                }
-            });
+            if(id){
+
+                service.edit(id, (res) => {
+                    // @todo: Helper JSON unpackage
+                    if(res.error){
+        
+                        alert(res.message);
+                    }
+                    else {
+        
+                        setProfileOptions(res.form.profiles);
+                        setData(res.data);
+                    }
+                });
+                
+            }
+            else {
+
+                service.new((res) => {
+                    // @todo: Helper JSON unpackage
+                    if(res.error){
+        
+                        alert(res.message);
+                    }
+                    else {
+        
+                        setProfileOptions(res.form.profiles);
+                        
+                    }
+                });
+            }
         }
 
     }, []);
@@ -96,23 +124,26 @@ export function UserForm({ service }){
                         <FormGroup row>
                             <Label sm={2}>E-mail</Label>
                             <Col sm={10}>
-                                <Input type="email" name="email" invalid={ fieldErrors['email'] ? true : false } placeholder="user@domain.com"  />
+                                <Input type="email" name="email" invalid={ fieldErrors['email'] ? true : false } placeholder="user@domain.com" defaultValue={ data['email'] || "" }  />
                                 <FormFeedback>{fieldErrors['email'] || ""}</FormFeedback>
                             </Col> 
                         </FormGroup>
                         <FormGroup row>
                             <Label sm={2}>Name</Label>
                             <Col sm={10}>
-                                <Input type="text" name="name" invalid={ fieldErrors['name'] ? true : false } />
+                                <Input type="text" name="name" invalid={ fieldErrors['name'] ? true : false } defaultValue={ data['name'] || "" } />
                                 <FormFeedback>{fieldErrors['name'] || ""}</FormFeedback>
                             </Col> 
                         </FormGroup>
                         <FormGroup row>
                             <Label sm={2}>Profile</Label>
                             <Col sm={10}>
-                                <Input type="select" name="profile_id" invalid={ fieldErrors['profile_id'] ? true : false }>
+                                <Input type="select" name="profile_id" invalid={ fieldErrors['profile_id'] ? true : false } >
                                     <option value="">Select</option>
-                                    { profileOptions.map(option => <option key={`profileOption${option.id}`} value={option.id}>{option.name}</option>) }  
+                                    { profileOptions.map(option => {
+        
+                                        return <option selected={data['profile_id'] == option.id} key={`profileOption${option.id}`} value={option.id}>{option.name}</option>
+                                    })}  
                                 </Input>
                                 <FormFeedback>{fieldErrors['profile_id'] || ""}</FormFeedback>
                             </Col> 
@@ -249,6 +280,7 @@ export function UserShow(){
     const service = UserService.newInstance(session.token);
     const { id = 0 } = useParams();
     const [ data, setData ] = useState({});
+
 
     const navigate = useNavigate();
 

@@ -59,6 +59,35 @@ export default class UserService {
 
     }
 
+    edit(id = 0, callback = () => {}) {
+
+        fetch("http://localhost:8080/user/" + id + '/edit', {
+            method: "GET",
+            headers: { 
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + this._token
+            }
+        })
+        .then(res => res.json())
+        .then(callback)
+        .catch(console.error)
+    }
+
+    update(body = {}, id = 0, callback = () => {}){
+
+        fetch("http://localhost:8080/user/" + id, {
+            method: "PUT",
+            headers: { 
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + this._token
+            },
+            body: JSON.stringify(body)
+        })
+        .then(res => res.json())
+        .then(callback)
+        .catch(console.error)
+    }
+
     show(id = 0, callback = () => {}) {
 
         fetch("http://localhost:8080/user/" + id, {
