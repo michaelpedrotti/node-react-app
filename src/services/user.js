@@ -113,7 +113,7 @@ export default class UserService {
         })
         .then(res => res.json())
         .then(callback)
-        .catch(console.error)
+        .catch(console.log)
     }
 
     /**

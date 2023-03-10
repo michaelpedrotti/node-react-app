@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Outlet, useParams, useNavigate } from "react-router-dom";
-import { Button, Table, Card, CardHeader, CardBody, Pagination, PaginationItem, PaginationLink, Input, Row, Col, Label, FormFeedback } from "reactstrap";
+import { Button, Table, Card, CardHeader, CardBody, Collapse, Pagination, PaginationItem, PaginationLink, Input, Row, Col, Label, FormFeedback } from "reactstrap";
 import { Form, FormGroup } from "reactstrap";
 import Viewport from '../layout/viewport';
 import UserService from '../../services/user';
@@ -219,11 +219,27 @@ export function UserIndex() {
             alert("Select one record");  
         } 
     };
-    // const onFilter = (e) => {
+    const onFilter = (e) => {
 
-    //     e.preventDefault();
+        e.preventDefault();
 
-    // };
+        let data = {};
+
+        for(const [key, val] of (new FormData(e.target)).entries()){
+
+            data['[field][' + key + ']'] = val;
+        }
+
+        setFilter(data);
+    };
+
+    const onReset = (e) => {
+
+        e.preventDefault();
+        //e.target.reset();
+
+        setFilter({});
+    };
 
     const onPaginate = (page) => {
 
@@ -240,71 +256,103 @@ export function UserIndex() {
             else {
 
                 setPages(Math.ceil(res.count / 10));
-
-                console.log('pages', pages);
                 setRows(res.rows);
             }
         });
 
-    }, [filter]);// eslint-disable-next-line
+    }, [filter]);
     
     return (
-
-        <Card  className="my-2">
-            <CardHeader>
-                <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <Button color="secundary" onClick={onShow}>Show</Button>
-                    <Button color="success" onClick={onCreate}>Add</Button>
-                    <Button color="primary" onClick={onEdit}>Edit</Button>
-                    <Button color="danger" onClick={onDelete}>Remove</Button>
-                </div>
-            </CardHeader>
-            <CardBody>
-                <Table hover>
-                    <thead>
-                        <tr>
-                            <th width="1rem">#</th>
-                            <th>E-mail</th>
-                            <th>Name</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        { rows.map(row => <tr key={`row-${row.id}`}>
-                                <td width="1rem">
-                                    <Input type="radio" name="id" value={row.id} onClick={e => setSelected(Number(e.target.value))} />
-                                </td>
-                                <td>{row.email}</td>
-                                <td>{row.name}</td>
+        <>
+            <Card className="mb-3">
+                <CardHeader>
+                    Filter
+                </CardHeader>
+                <Collapse isOpen={true}>
+                    <CardBody>
+                        <Form onSubmit={onFilter}>
+                            <Row>
+                                <Col md={6}>
+                                    <FormGroup>
+                                        <Label>Email</Label>
+                                        <Input type="text" name="email" />
+                                    </FormGroup>
+                                </Col>
+                                <Col md={6}>
+                                    <FormGroup>
+                                        <Label>Name</Label>
+                                        <Input type="text" name="name" />
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <Button color="primary">Search</Button>
+                                    {" "}
+                                    <Button color="secondary" onClick={onReset}>Reset</Button>
+                                </Col>
+                            </Row>
+                        </Form>
+                    </CardBody>
+                </Collapse>
+            </Card>
+            <Card>
+                <CardHeader>
+                    <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <Button color="secondary" onClick={onShow}>Show</Button>
+                        <Button color="success" onClick={onCreate}>Add</Button>
+                        <Button color="primary" onClick={onEdit}>Edit</Button>
+                        <Button color="danger" onClick={onDelete}>Remove</Button>
+                    </div>
+                </CardHeader>
+                <CardBody> 
+                    <Table hover>
+                        <thead>
+                            <tr>
+                                <th width="1rem">#</th>
+                                <th>E-mail</th>
+                                <th>Name</th>
                             </tr>
-                        )}
-                    </tbody>
-                    <tfoot>
-                        <Row>
-                            <Col lg="4">dafasd</Col>
-                            <Col lg="8">
-                                <Pagination>
-                                    <PaginationItem disabled={ pages === 1 }>
-                                        <PaginationLink first href="#" />
-                                    </PaginationItem>
-                                    <PaginationItem disabled={ pages === 1 }>
-                                        <PaginationLink  href="#" previous/>
-                                    </PaginationItem>
-                                    <PaginationItem>
-                                        {[...Array(pages)].map((e, i) => <PaginationLink href="javascript:void(0)" onClick={e => onPaginate(i + 1)}>{i + 1}</PaginationLink>)}
-                                    </PaginationItem>
-                                    <PaginationItem  disabled={ pages === 1 }>
-                                        <PaginationLink href="#" next />
-                                    </PaginationItem>
-                                    <PaginationItem disabled={ pages === 1 }>
-                                        <PaginationLink href="#" last />
-                                    </PaginationItem>
-                                </Pagination>
-                            </Col>
-                        </Row>
-                    </tfoot>
-                </Table>
-            </CardBody>
-        </Card>
+                        </thead>
+                        <tbody>
+                            { rows.map(row => <tr key={`row-${row.id}`}>
+                                    <td width="1rem">
+                                        <Input type="radio" name="id" value={row.id} onClick={e => setSelected(Number(e.target.value))} />
+                                    </td>
+                                    <td>{row.email}</td>
+                                    <td>{row.name}</td>
+                                </tr>
+                            )}
+                        </tbody>
+                        <tfoot>
+                            <Row>
+                                <Col lg="4">dafasd</Col>
+                                <Col lg="8">
+                                    <Pagination>
+                                        <PaginationItem disabled={ pages === 1 }>
+                                            <PaginationLink first href="#" onClick={e => onPaginate(1)} />
+                                        </PaginationItem>
+                                        <PaginationItem disabled={ pages === 1 }>
+                                            <PaginationLink  href="#" previous/>
+                                        </PaginationItem>
+                                            {[...Array(pages).keys()].map(index => <PaginationItem>
+                                                    <PaginationLink href="#" onClick={e => onPaginate(index + 1)}>{index + 1}</PaginationLink>
+                                                </PaginationItem>
+                                            )}
+                                        <PaginationItem  disabled={ pages === 1 }>
+                                            <PaginationLink href="#" next />
+                                        </PaginationItem>
+                                        <PaginationItem disabled={ pages === 1 }>
+                                            <PaginationLink href="#" last onClick={e => onPaginate(pages)} />
+                                        </PaginationItem>
+                                    </Pagination>
+                                </Col>
+                            </Row>
+                        </tfoot>
+                    </Table>
+                </CardBody>
+            </Card>
+        </>
     );
 }
 
