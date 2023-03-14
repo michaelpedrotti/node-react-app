@@ -1,47 +1,66 @@
-import { Outlet, useParams } from "react-router-dom";
-import Viewport from '../layout/viewport';
+import { useContext, useState } from "react";
+import { Row, Col, FormGroup, Label, Input, FormFeedback } from "reactstrap";
+import { SessionContext } from "../../contexts/session";
+import PermissionService from "../../services/permission";
+import { AbstractCrudForm, AbstractCrudIndex, AbstractCrudLayout, AbstractCrudShow } from "../abstractCrud";
 
 export function PermissionLayout() {
     
-    return (
-        <Viewport breadcrumbs={[['Admin'], ['Permission']]}>
-            <Outlet />
-        </Viewport>
-    );
+    return <AbstractCrudLayout />;
 }
 
 export function PermissionIndex(){
 
-    return (
+    const [ session ] = useContext(SessionContext);
+    const service = PermissionService.newInstance(session.token);
+    const columns = {
+        'id': '#', 
+        'resource': 'Name'
+    };
 
-        <div>Permission.Index</div>
-    );
+    return <AbstractCrudIndex service={service} baseRoute="/profile" columns={columns}>
+        <Row>
+            <Col md={6}>
+                <FormGroup>
+                    <Label>Name</Label>
+                    <Input type="text" name="name" />
+                </FormGroup>
+            </Col>
+        </Row>
+    </AbstractCrudIndex>;
 }
 
 export function PermissionShow(){
 
-    const params = useParams();
+    const [ session ] = useContext(SessionContext);
+    const service = PermissionService.newInstance(session.token);
+    const state = useState({});
+    const [ data ] = state;
 
-    return (
-
-        <div>Show {params.id}</div>
-    );
+    return  <AbstractCrudShow service={service} state={state} baseRoute="/profile">
+        <FormGroup row>
+            <Label sm={2}>Name</Label>
+            <Col sm={10}>{ data.name || ""}</Col> 
+        </FormGroup> 
+    </AbstractCrudShow>;
 }
 
-export function PermissionEdit(){
+export function PermissionForm(){
 
-    const params = useParams();
+    const [ session ] = useContext(SessionContext);
+    const service = PermissionService.newInstance(session.token);
+    const stateData = useState({});
+    const stateError = useState({});
+    const [data] = stateData;
+    const [error] = stateError;
 
-    return (
-
-        <div>Edit {params.id}</div>
-    );
-}
-
-export function PermissionNew(){
-
-    return (
-
-        <div>New</div>
-    );
+    return <AbstractCrudForm service={service} stateData={stateData} stateError={stateError} baseRoute="/profile">
+        <FormGroup row>
+            <Label sm={3}>Name</Label>
+            <Col sm={9}>
+                <Input type="text" name="name" invalid={ error['name'] ? true : false } defaultValue={ data['name'] || "" } />
+                <FormFeedback>{ error['name'] || "" }</FormFeedback>
+            </Col> 
+        </FormGroup>
+    </AbstractCrudForm>;
 }

@@ -1,6 +1,5 @@
 import { useContext, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Row, Col, FormGroup, Label, Input, FormFeedback } from "reactstrap";
+import { Table, Row, Col, FormGroup, Label, Input, FormFeedback } from "reactstrap";
 import { SessionContext } from "../../contexts/session";
 import ProfileService from "../../services/profile";
 import { AbstractCrudForm, AbstractCrudIndex, AbstractCrudLayout, AbstractCrudShow } from "../abstractCrud";
@@ -42,8 +41,54 @@ export function ProfileShow(){
         <FormGroup row>
             <Label sm={2}>Name</Label>
             <Col sm={10}>{ data.name || ""}</Col> 
-        </FormGroup> 
+        </FormGroup>
+        <PermissionFormGroup />
     </AbstractCrudShow>;
+}
+
+const PermissionFormGroup = () => {
+
+    const actions = {
+        'create': 'C',
+        'read': 'R',
+        'update': 'U',
+        'delete': 'D'
+    };
+    const rows = [
+        {id: 1, resource: "user", actions: ["R"]},
+        {id: 2, resource: "profile", actions: ["R"]},
+        {id: 3, resource: "permission", actions: ["R"]},
+    ];
+
+    return (
+        <FormGroup row>
+            <Col sm={12}><h4>Permissions</h4></Col>
+            <Col sm={12}>
+                <Table>
+                    <thead>
+                        <tr>
+                            <th>Resource</th>
+                            {Object.keys(actions).map(key => <th key={`tableTrTh${key}`} style={{'textAlign':'center'}}>{key}</th>)}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        { rows.map((row, index) =>  <tr>
+                                <td>{ row.resource }</td>
+                                    {Object.values(actions).map(val => <td key={`tableTrTd${val}`} style={{'textAlign':'center'}}>
+                                    <Input 
+                                        type="checkbox" 
+                                        name={`actions[${index}]`} 
+                                        checked={row.actions.includes(val)} 
+                                        defaultValue={val}
+                                    />
+                                </td>)}
+                            </tr>    
+                        )}
+                    </tbody>
+                </Table>
+            </Col>
+        </FormGroup>
+    );
 }
 
 export function ProfileForm(){
@@ -63,5 +108,6 @@ export function ProfileForm(){
                 <FormFeedback>{ error['name'] || "" }</FormFeedback>
             </Col> 
         </FormGroup>
+        <PermissionFormGroup />
     </AbstractCrudForm>;
 }

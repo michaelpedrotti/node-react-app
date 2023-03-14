@@ -4,7 +4,7 @@ import { HomeIndex, HomeLayout } from "./pages/home";
 import { AuthLogin } from "./pages/auth";
 import { UserLayout, UserIndex, UserShow, UserEdit, UserNew } from "./pages/user";
 import { ProfileLayout, ProfileIndex, ProfileShow, ProfileForm } from "./pages/profile";
-import { PermissionLayout, PermissionIndex, PermissionShow, PermissionEdit, PermissionNew } from "./pages/permission";
+import { PermissionLayout, PermissionIndex, PermissionShow, PermissionForm } from "./pages/permission";
 import { SessionContextProvider } from "./contexts/session"
 import { AuthenticatedRoute } from "./middlewares/authentication";
 import { AuthorizatedRoute } from "./middlewares/authorization";
@@ -66,8 +66,8 @@ export default function App() {
                 }>
                   <Route index element={<PermissionIndex />} />
                   <Route path=":id" element={<PermissionShow />} /> 
-                  <Route path=":id/edit" element={<PermissionEdit />} />
-                  <Route path="new" element={<PermissionNew />} />
+                  <Route path=":id/edit" element={<PermissionForm />} />
+                  <Route path="new" element={<PermissionForm />} />
                 </Route>
                 
                 {/* Public pages */}
