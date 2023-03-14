@@ -1,19 +1,6 @@
-export default class AuthService {
+import AbstractService from "./abstract";
 
-    constructor(){
-
-        this._token = null;
-    }
-
-    /**
-     * 
-     * @returns {AuthService}
-     */
-    setToken(token = ''){
-
-        this._token = token;
-        return this;
-    }
+export default class AuthService extends AbstractService {
 
     /**
      * 
@@ -21,7 +8,7 @@ export default class AuthService {
      */
     login(email, password, callback = () => {}){
 
-        fetch("http://localhost:8080/auth/login", {
+        fetch(this._getURL("/auth/login"), {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password })
@@ -33,12 +20,9 @@ export default class AuthService {
 
     getFullAccess(callback = () => {}){
 
-        fetch("http://localhost:8080/auth/me", {
+        fetch(this._getURL("/auth/me"), {
             method: "GET",
-            headers: { 
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + this._token
-            }
+            headers: this._getHeaders()
         })
         .then(res => res.json())
         .then(callback)
@@ -49,7 +33,7 @@ export default class AuthService {
      * 
      * @returns {AuthService}
      */
-    static newInstance(){
-        return new AuthService();
+    static newInstance(token = null){
+        return new AuthService(token);
     }
 }

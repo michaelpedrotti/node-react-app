@@ -12,13 +12,12 @@ export function HomeLayout() {
     );
 }
 
-export function HomeIndex(props) {
+export function HomeIndex() {
     
     const [ session ] = useContext(SessionContext);
-    console.log('value', session);
+
     return (
 
         <div>Home, {session.name}</div>
     );
-
 }

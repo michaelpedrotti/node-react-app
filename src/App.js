@@ -3,7 +3,7 @@ import { UnauthorizedError, ForbiddenError, NotFoundError  } from "./pages/error
 import { HomeIndex, HomeLayout } from "./pages/home";
 import { AuthLogin } from "./pages/auth";
 import { UserLayout, UserIndex, UserShow, UserEdit, UserNew } from "./pages/user";
-import { ProfileLayout, ProfileIndex, ProfileShow, ProfileEdit, ProfileNew } from "./pages/profile";
+import { ProfileLayout, ProfileIndex, ProfileShow, ProfileForm } from "./pages/profile";
 import { PermissionLayout, PermissionIndex, PermissionShow, PermissionEdit, PermissionNew } from "./pages/permission";
 import { SessionContextProvider } from "./contexts/session"
 import { AuthenticatedRoute } from "./middlewares/authentication";
@@ -52,8 +52,8 @@ export default function App() {
                 }>
                   <Route index element={<ProfileIndex />} />
                   <Route path=":id" element={<ProfileShow />} /> 
-                  <Route path=":id/edit" element={<ProfileEdit />} />
-                  <Route path="new" element={<ProfileNew />} />
+                  <Route path=":id/edit" element={<ProfileForm />} />
+                  <Route path="new" element={<ProfileForm />} />
                 </Route>
 
                 {/* Private profile pages */}

@@ -1,47 +1,68 @@
-import { Outlet, useParams } from "react-router-dom";
-import Viewport from '../layout/viewport';
+import { useContext, useState } from "react";
+import { useParams } from "react-router-dom";
+import { Row, Col, FormGroup, Label, Input, FormFeedback } from "reactstrap";
+import { SessionContext } from "../../contexts/session";
+import UserService from "../../services/user";
+import { AbstractCrudForm, AbstractCrudIndex, AbstractCrudLayout, AbstractCrudShow } from "../abstractCrud";
 
 export function ProfileLayout() {
     
-    return (
-        <Viewport breadcrumbs={[['Admin'], ['Profile']]}>
-            <Outlet />
-        </Viewport>
-    );
+    return <AbstractCrudLayout />;
 }
 
 export function ProfileIndex(){
 
-    return (
+    const [ session ] = useContext(SessionContext);
+    const service = UserService.newInstance(session.token);
+    const columns = {
+        'id': '#', 
+        'email': 'E-mail', 
+        'name': 'Name'
+    };
 
-        <div>Profile.Index</div>
-    );
+    return <AbstractCrudIndex service={service} baseRoute="/profile" columns={columns}>
+        <Row>
+            <Col md={6}>
+                <FormGroup>
+                    <Label>Name</Label>
+                    <Input type="text" name="name" />
+                </FormGroup>
+            </Col>
+        </Row>
+    </AbstractCrudIndex>;
 }
 
 export function ProfileShow(){
 
-    const params = useParams();
+    const [ session ] = useContext(SessionContext);
+    const service = UserService.newInstance(session.token);
+    const state = useState({});
+    const [ data ] = state;
 
-    return (
-
-        <div>Show {params.id}</div>
-    );
+    return  <AbstractCrudShow service={service} state={state} baseRoute="/profile">
+        <FormGroup row>
+            <Label sm={2}>Name</Label>
+            <Col sm={10}>{ data.name || ""}</Col> 
+        </FormGroup> 
+    </AbstractCrudShow>;
 }
 
-export function ProfileEdit(){
+export function ProfileForm(){
 
-    const params = useParams();
+    const [ session ] = useContext(SessionContext);
+    const service = UserService.newInstance(session.token);
+    const stateData = useState({});
+    const stateError = useState({});
+    const [data] = stateData;
+    const [error] = stateError;
 
-    return (
-
-        <div>Edit {params.id}</div>
-    );
-}
-
-export function ProfileNew(){
-
-    return (
-
-        <div>New</div>
-    );
+    return <AbstractCrudForm service={service} stateData={stateData} stateError={stateError} baseRoute="/profile">
+        <FormGroup row>
+            <Label sm={3}>Name</Label>
+            <Col sm={9}>
+                <Input type="text" name="name" invalid={ error['name'] ? true : false } defaultValue={ data['name'] || "" } />
+                <FormFeedback>{ error['name'] || "" }</FormFeedback>
+            </Col> 
+        </FormGroup>
+    </AbstractCrudForm>;
 }
