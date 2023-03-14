@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Row, Col, FormGroup, Label, Input, FormFeedback } from "reactstrap";
 import { SessionContext } from "../../contexts/session";
-import UserService from "../../services/user";
+import ProfileService from "../../services/profile";
 import { AbstractCrudForm, AbstractCrudIndex, AbstractCrudLayout, AbstractCrudShow } from "../abstractCrud";
 
 export function ProfileLayout() {
@@ -13,10 +13,9 @@ export function ProfileLayout() {
 export function ProfileIndex(){
 
     const [ session ] = useContext(SessionContext);
-    const service = UserService.newInstance(session.token);
+    const service = ProfileService.newInstance(session.token);
     const columns = {
         'id': '#', 
-        'email': 'E-mail', 
         'name': 'Name'
     };
 
@@ -35,7 +34,7 @@ export function ProfileIndex(){
 export function ProfileShow(){
 
     const [ session ] = useContext(SessionContext);
-    const service = UserService.newInstance(session.token);
+    const service = ProfileService.newInstance(session.token);
     const state = useState({});
     const [ data ] = state;
 
@@ -50,7 +49,7 @@ export function ProfileShow(){
 export function ProfileForm(){
 
     const [ session ] = useContext(SessionContext);
-    const service = UserService.newInstance(session.token);
+    const service = ProfileService.newInstance(session.token);
     const stateData = useState({});
     const stateError = useState({});
     const [data] = stateData;
