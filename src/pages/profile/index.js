@@ -4,11 +4,19 @@ import { SessionContext } from "../../contexts/session";
 import ProfileService from "../../services/profile";
 import { AbstractCrudForm, AbstractCrudIndex, AbstractCrudLayout, AbstractCrudShow } from "../abstractCrud";
 
+/**
+ * @param {React.HTMLAttributes} props
+ * @returns {React.Component} 
+ */
 export function ProfileLayout() {
     
     return <AbstractCrudLayout />;
 }
 
+/**
+ * @param {React.HTMLAttributes} props
+ * @returns {React.Component} 
+ */
 export function ProfileIndex(){
 
     const [ session ] = useContext(SessionContext);
@@ -30,6 +38,10 @@ export function ProfileIndex(){
     </AbstractCrudIndex>;
 }
 
+/**
+ * @param {React.HTMLAttributes} props
+ * @returns {React.Component} 
+ */
 export function ProfileShow(){
 
     const [ session ] = useContext(SessionContext);
@@ -46,7 +58,41 @@ export function ProfileShow(){
     </AbstractCrudShow>;
 }
 
-const PermissionFormGroup = () => {
+/**
+ * @param {React.HTMLAttributes} props
+ * @returns {React.Component} 
+ */
+export function ProfileForm(){
+
+    const [ session ] = useContext(SessionContext);
+    const service = ProfileService.newInstance(session.token);
+    const jsonState = useState({
+        error: false,
+        data: {},
+        fields: {},
+        form: {} 
+    });
+
+    const [json] = jsonState;
+
+
+    return <AbstractCrudForm service={service} jsonState={jsonState} baseRoute="/profile">
+        <FormGroup row>
+            <Label sm={3}>Name</Label>
+            <Col sm={9}>
+                <Input type="text" name="name" invalid={ json.fields['name'] ? true : false } defaultValue={ json.data['name'] || "" } />
+                <FormFeedback>{ json.fields['name'] || "" }</FormFeedback>
+            </Col> 
+        </FormGroup>
+        <PermissionFormGroup jsonState={jsonState} />
+    </AbstractCrudForm>;
+}
+
+/**
+ * @param {React.HTMLAttributes} props
+ * @returns {React.Component} 
+ */
+const PermissionFormGroup = ({jsonState}) => {
 
     const actions = {
         'create': 'C',
@@ -62,7 +108,9 @@ const PermissionFormGroup = () => {
 
     return (
         <FormGroup row>
-            <Col sm={12}><h4>Permissions</h4></Col>
+            <Col sm={12}>
+                <h4>Permissions</h4>
+            </Col>
             <Col sm={12}>
                 <Table>
                     <thead>
@@ -77,8 +125,8 @@ const PermissionFormGroup = () => {
                                     {Object.values(actions).map(val => <td key={`tableTrTd${val}`} style={{'textAlign':'center'}}>
                                     <Input 
                                         type="checkbox" 
-                                        name={`actions[${index}]`} 
-                                        checked={row.actions.includes(val)} 
+                                        name={`actions[${index}]`}
+                                        defaultChecked={row.actions.includes(val)} 
                                         defaultValue={val}
                                     />
                                 </td>)}
@@ -89,25 +137,4 @@ const PermissionFormGroup = () => {
             </Col>
         </FormGroup>
     );
-}
-
-export function ProfileForm(){
-
-    const [ session ] = useContext(SessionContext);
-    const service = ProfileService.newInstance(session.token);
-    const stateData = useState({});
-    const stateError = useState({});
-    const [data] = stateData;
-    const [error] = stateError;
-
-    return <AbstractCrudForm service={service} stateData={stateData} stateError={stateError} baseRoute="/profile">
-        <FormGroup row>
-            <Label sm={3}>Name</Label>
-            <Col sm={9}>
-                <Input type="text" name="name" invalid={ error['name'] ? true : false } defaultValue={ data['name'] || "" } />
-                <FormFeedback>{ error['name'] || "" }</FormFeedback>
-            </Col> 
-        </FormGroup>
-        <PermissionFormGroup />
-    </AbstractCrudForm>;
 }

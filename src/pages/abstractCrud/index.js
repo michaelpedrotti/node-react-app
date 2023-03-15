@@ -5,6 +5,10 @@ import { Table, Row, Col, Card, CardHeader, CardBody, Collapse, Input, Paginatio
 import Viewport from '../layout/viewport';
 
 
+/**
+ * @param {React.HTMLAttributes} props
+ * @returns {React.Component} 
+ */
 export function AbstractCrudLayout({ breadcrumbs }) {
     
     return (
@@ -14,10 +18,14 @@ export function AbstractCrudLayout({ breadcrumbs }) {
     );
 }
 
-export function AbstractCrudForm({ service, stateData, stateError, baseRoute = '/user', children }){
 
-    const [, setFieldErrors] = stateError;
-    const [, setData] = stateData;
+/**
+ * @param {React.HTMLAttributes} props
+ * @returns {React.Component} 
+ */
+export function AbstractCrudForm({ service, jsonState, baseRoute = '/user', children }){
+
+    const [ json, setJson] = jsonState;
     const navigate = useNavigate();
     const { id  } = useParams();
 
@@ -38,14 +46,14 @@ export function AbstractCrudForm({ service, stateData, stateError, baseRoute = '
 
                 if(res.fields){
 
-                    let errors = {};
+                    let fields = {};
 
                     for(const [field, data] of Object.entries(res.fields)){
 
-                        errors[field] = data.msg;
+                        fields[field] = data.msg;
                     }
-                    
-                    setFieldErrors(errors);
+
+                    setJson({...json, ...{...res, fields }});
                 }
 
                 alert(res.message || "Error");
@@ -87,7 +95,7 @@ export function AbstractCrudForm({ service, stateData, stateError, baseRoute = '
                     }
                     else {
         
-                        setData(res.data);
+                        setJson({...json, ...res});
                     }
                 });
             }
@@ -99,15 +107,13 @@ export function AbstractCrudForm({ service, stateData, stateError, baseRoute = '
         
                         alert(res.message);
                     }
-                    else {
-        
-                        // setProfileOptions(res.form.profiles);   
-                    }
+
+                    setJson({...json, ...res});
                 });
             }
         }
 
-    }, [id, service]);
+    }, [id]);
 
     return(
 
@@ -126,6 +132,11 @@ export function AbstractCrudForm({ service, stateData, stateError, baseRoute = '
     );
 }
 
+
+/**
+ * @param {React.HTMLAttributes} props
+ * @returns {React.Component} 
+ */
 export function AbstractCrudIndex({ service, baseRoute = '/user', children, columns={} }) {
 
     const [rows, setRows] = useState([]);
@@ -316,6 +327,11 @@ export function AbstractCrudIndex({ service, baseRoute = '/user', children, colu
     );
 }
 
+
+/**
+ * @param {React.HTMLAttributes} props
+ * @returns {React.Component} 
+ */
 export function AbstractCrudShow({ service, state, baseRoute = '/user', children }){
 
     const { id = 0 } = useParams();
