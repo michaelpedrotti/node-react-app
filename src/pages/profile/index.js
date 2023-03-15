@@ -75,7 +75,6 @@ export function ProfileForm(){
 
     const [json] = jsonState;
 
-
     return <AbstractCrudForm service={service} jsonState={jsonState} baseRoute="/profile">
         <FormGroup row>
             <Label sm={3}>Name</Label>
@@ -94,18 +93,11 @@ export function ProfileForm(){
  */
 const PermissionFormGroup = ({jsonState}) => {
 
-    const actions = {
-        'create': 'C',
-        'read': 'R',
-        'update': 'U',
-        'delete': 'D'
-    };
-    const rows = [
-        {id: 1, resource: "user", actions: ["R"]},
-        {id: 2, resource: "profile", actions: ["R"]},
-        {id: 3, resource: "permission", actions: ["R"]},
-    ];
-
+    const [json] = jsonState;
+    const resources = json?.form?.resources || [];
+    const actions = Object(json?.form?.actions);
+    const rows = json?.data?.permissions || [];
+    
     return (
         <FormGroup row>
             <Col sm={12}>
@@ -120,14 +112,14 @@ const PermissionFormGroup = ({jsonState}) => {
                         </tr>
                     </thead>
                     <tbody>
-                        { rows.map((row, index) =>  <tr>
-                                <td>{ row.resource }</td>
-                                    {Object.values(actions).map(val => <td key={`tableTrTd${val}`} style={{'textAlign':'center'}}>
+                        { resources.map((resource, index) =>  <tr>
+                                <td>{ resource }</td>
+                                    {Object.values(actions).map(action => <td key={`tableTrTd${action}`} style={{'textAlign':'center'}}>
                                     <Input 
                                         type="checkbox" 
-                                        name={`actions[${index}]`}
-                                        defaultChecked={row.actions.includes(val)} 
-                                        defaultValue={val}
+                                        name={`permissions[${resource}]`}
+                                        defaultChecked={rows.some(row => row.resource == resource && row.actions.includes(action))} 
+                                        defaultValue={action}
                                     />
                                 </td>)}
                             </tr>    

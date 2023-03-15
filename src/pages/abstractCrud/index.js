@@ -25,20 +25,56 @@ export function AbstractCrudLayout({ breadcrumbs }) {
  */
 export function AbstractCrudForm({ service, jsonState, baseRoute = '/user', children }){
 
-    const [ json, setJson] = jsonState;
+    const [ jsonDefaults, setJson] = jsonState;
     const navigate = useNavigate();
-    const { id  } = useParams();
+    const { id } = useParams();
+
+    const formDataToJson = function(formData){
+
+        let json = {};
+
+        const recursive = (name, json = {}) => {
+
+            if(!json[name]){
+                json[name] = {};
+            }
+            
+            return json[name];
+        };
+
+        for (const key of formData.keys()) {
+
+            if(key.includes('[')){
+
+                const arr = key.replace(']', '').split('[');
+                let current = json;
+                let last = arr.pop();
+
+                while(arr.length > 0){
+                    
+                    let name = arr.shift();
+                    
+                    current = recursive(name, current);               
+                }
+
+                current[last] = formData.getAll(key);
+            }
+            else {
+                json[key] = formData.get(key);
+
+            }
+        }
+
+        return json;
+
+    };
+
 
     const onFormSubmit = (e) => {
 
         e.preventDefault();
 
-        let body = {};
-
-        for(const [key, val] of (new FormData(e.target)).entries()){
-
-            body[key] = val;
-        }
+        let body = formDataToJson(new FormData(e.target));
 
         const callback = (res) => {
 
@@ -53,7 +89,7 @@ export function AbstractCrudForm({ service, jsonState, baseRoute = '/user', chil
                         fields[field] = data.msg;
                     }
 
-                    setJson({...json, ...{...res, fields }});
+                    setJson({...jsonDefaults, ...{...res, fields }});
                 }
 
                 alert(res.message || "Error");
@@ -95,7 +131,7 @@ export function AbstractCrudForm({ service, jsonState, baseRoute = '/user', chil
                     }
                     else {
         
-                        setJson({...json, ...res});
+                        setJson({...jsonDefaults, ...res});
                     }
                 });
             }
@@ -108,7 +144,7 @@ export function AbstractCrudForm({ service, jsonState, baseRoute = '/user', chil
                         alert(res.message);
                     }
 
-                    setJson({...json, ...res});
+                    setJson({...jsonDefaults, ...res});
                 });
             }
         }
