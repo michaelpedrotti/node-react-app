@@ -2,9 +2,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { UnauthorizedError, ForbiddenError, NotFoundError  } from "./pages/error";
 import { HomeIndex, HomeLayout } from "./pages/home";
 import { AuthLayout, AuthLogin, AuthSetting } from "./pages/auth";
-import { UserLayout, UserIndex, UserShow, UserEdit, UserNew } from "./pages/user";
+import { UserLayout, UserIndex, UserShow, UserForm } from "./pages/user";
 import { ProfileLayout, ProfileIndex, ProfileShow, ProfileForm } from "./pages/profile";
-import { PermissionLayout, PermissionIndex, PermissionShow, PermissionForm } from "./pages/permission";
 import { SessionContextProvider } from "./contexts/session"
 import { AuthenticatedRoute } from "./middlewares/authentication";
 import { AuthorizatedRoute } from "./middlewares/authorization";
@@ -44,8 +43,8 @@ export default function App() {
                   }>
                     <Route index element={<UserIndex />} />
                     <Route path=":id" element={<UserShow />} /> 
-                    <Route path=":id/edit" element={<UserEdit />} />
-                    <Route path="new" element={<UserNew />} />
+                    <Route path=":id/edit" element={<UserForm />} />
+                    <Route path="new" element={<UserForm />} />
                   </Route>
 
                   {/* Private profile pages */}

@@ -10,7 +10,7 @@ import { AbstractCrudForm, AbstractCrudIndex, AbstractCrudLayout, AbstractCrudSh
  */
 export function ProfileLayout() {
     
-    return <AbstractCrudLayout />;
+    return <AbstractCrudLayout breadcrumbs={[['Admin'], ['Profile']]} />;
 }
 
 /**
