@@ -1,6 +1,6 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUsers, faQuestion, faImage } from "@fortawesome/free-solid-svg-icons";
+import { faUsers, faImage } from "@fortawesome/free-solid-svg-icons";
 import { NavLink, NavItem, Nav, NavbarText } from "reactstrap";
 import classNames from "classnames";
 import { Link } from "react-router-dom";

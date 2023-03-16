@@ -1,0 +1,32 @@
+version: "3"
+services:
+  app:
+    image: pedrotti/node:react
+    container_name: node-app
+    ports:
+      - "80:3000"
+    network_mode: bridge
+  api:
+    image: pedrotti/node:express
+    container_name: node-api
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: 'dbhost'
+      DB_PORT: '3306'
+      DB_USERNAME: 'root'
+      DB_PASSWORD: 'root'
+      DB_NAME: 'app'
+      JWT_SECRET: '????????????????????????????????????????????????????????????????'
+    links:
+      - db:dbhost
+    network_mode: bridge
+  db:
+    image: mysql:5.7
+    container_name: node-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: app
+    ports:
+      - 3306:3306
+    network_mode: bridge
