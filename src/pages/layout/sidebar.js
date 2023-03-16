@@ -25,11 +25,6 @@ const SideBar = ({ isOpen, toggle }) => (
             <FontAwesomeIcon icon={faImage} className="mr-2" /> Profile
           </NavLink>
         </NavItem>
-        <NavItem>
-          <NavLink tag={Link} to={"/permission"}>
-            <FontAwesomeIcon icon={faQuestion} className="mr-2" /> Permission
-          </NavLink>
-        </NavItem>
       </Nav>
     </div>
   </div>

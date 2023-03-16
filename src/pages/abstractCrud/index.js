@@ -18,6 +18,44 @@ export function AbstractCrudLayout({ breadcrumbs }) {
     );
 }
 
+export const formDataToJson = function(formData){
+
+    let json = {};
+
+    const recursive = (name, json = {}) => {
+
+        if(!json[name]){
+            json[name] = {};
+        }
+        
+        return json[name];
+    };
+
+    for (const key of formData.keys()) {
+
+        if(key.includes('[')){
+
+            const arr = key.replace(']', '').split('[');
+            let current = json;
+            let last = arr.pop();
+
+            while(arr.length > 0){
+                
+                let name = arr.shift();
+                
+                current = recursive(name, current);               
+            }
+
+            current[last] = formData.getAll(key);
+        }
+        else {
+            json[key] = formData.get(key);
+
+        }
+    }
+
+    return json;
+};
 
 /**
  * @param {React.HTMLAttributes} props
@@ -28,47 +66,6 @@ export function AbstractCrudForm({ service, jsonState, baseRoute = '/user', chil
     const [ jsonDefaults, setJson] = jsonState;
     const navigate = useNavigate();
     const { id } = useParams();
-
-    const formDataToJson = function(formData){
-
-        let json = {};
-
-        const recursive = (name, json = {}) => {
-
-            if(!json[name]){
-                json[name] = {};
-            }
-            
-            return json[name];
-        };
-
-        for (const key of formData.keys()) {
-
-            if(key.includes('[')){
-
-                const arr = key.replace(']', '').split('[');
-                let current = json;
-                let last = arr.pop();
-
-                while(arr.length > 0){
-                    
-                    let name = arr.shift();
-                    
-                    current = recursive(name, current);               
-                }
-
-                current[last] = formData.getAll(key);
-            }
-            else {
-                json[key] = formData.get(key);
-
-            }
-        }
-
-        return json;
-
-    };
-
 
     const onFormSubmit = (e) => {
 
@@ -248,7 +245,7 @@ export function AbstractCrudIndex({ service, baseRoute = '/user', children, colu
     const onClickReset = (e) => {
 
         e.preventDefault();
-        //e.target.reset();
+        e.target.closest("form").reset();
 
         setFilter({});
     };

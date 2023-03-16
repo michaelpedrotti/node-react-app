@@ -29,6 +29,29 @@ export default class AuthService extends AbstractService {
         .catch(console.error)
     }
 
+    loadSetting(callback = () => {}){
+
+        fetch(this._getURL("/auth/setting"), {
+            method: "GET",
+            headers: this._getHeaders(),
+        })
+        .then(res => res.json())
+        .then(callback)
+        .catch(console.error);
+    }
+
+    saveSetting(body = {}, callback = () => {}){
+
+        fetch(this._getURL("/auth/setting"), {
+            method: "POST",
+            headers: this._getHeaders(),
+            body: JSON.stringify(body)
+        })
+        .then(res => res.json())
+        .then(callback)
+        .catch(console.error);
+    }
+
     /**
      * 
      * @returns {AuthService}

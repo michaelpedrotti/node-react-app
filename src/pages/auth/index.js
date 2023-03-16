@@ -1,10 +1,20 @@
-import { useState, useContext } from "react";
-import { Navigate } from "react-router-dom";
-import { Alert, Container, Row, Col, Card, CardBody, Button, Form, FormGroup, Label, Input } from "reactstrap";
+import { useState, useContext, useEffect } from "react";
+import { Navigate, Outlet } from "react-router-dom";
+import { Alert, Container, Row, Col, Card, CardBody, Button, Form, FormGroup, Label, Input, FormFeedback } from "reactstrap";
 import { SessionContext } from "../../contexts/session";
 import { ErrorContext } from "../../contexts/error";
 import AuthService from "../../services/auth";
+import Viewport from '../layout/viewport';
+import { formDataToJson } from "../abstractCrud";
 
+export function AuthLayout() {
+    
+  return (
+      <Viewport breadcrumbs={[['Home', 'Settings']]}>
+          <Outlet />
+      </Viewport>
+  );
+}
 
 /**
  * @link https://j19ly.csb.app/
@@ -98,3 +108,84 @@ export function AuthLogin(){
     </Container>
   );
 };
+
+
+export function AuthSetting(){
+
+  const [ session ] = useContext(SessionContext);
+  const service = AuthService.newInstance(session.token);
+  const [data, setData] = useState({});
+  const [error, setError] = useState({});
+
+  const onFormSubmit = (e) => {
+
+    e.preventDefault();
+
+    const body = formDataToJson(new FormData(e.target));
+
+    service.saveSetting(body, (res) => {
+      
+      if(res.fields){
+
+        let errors = {};
+
+        for(const [field, data] of Object.entries(res.fields)){
+
+            errors[field] = data.msg;
+        }
+        
+        setError(errors);  
+      } 
+    });
+  };
+
+  useEffect(function(){
+
+    service.loadSetting((res) => {
+
+      if(res.error){
+
+        alert(res.message);   
+      }
+      else {
+
+        setData(res.data);
+      }
+    });
+
+  }, [])
+
+  return (
+
+    <Card>
+      <CardBody>
+          <Col sm={8}>
+              <Form onSubmit={onFormSubmit} autoComplete="off">
+                <FormGroup row>
+                  <Label sm={3}>Name</Label>
+                    <Col sm={9}>
+                        <Input type="text" name="name" invalid={error['name'] ? true : false} placeholder="" autoComplete="off" defaultValue={data['name'] || ''} />
+                        <FormFeedback>{ error['name'] || "" }</FormFeedback>
+                    </Col> 
+                </FormGroup>
+                <FormGroup row>
+                  <Label sm={3}>Current Password</Label>
+                    <Col sm={9}>
+                        <Input type="password" name="current_password" invalid={error['current_password'] ? true : false} placeholder="" autoComplete="off" defaultValue="" />
+                        <FormFeedback>{ error['current_password'] || "" }</FormFeedback>
+                    </Col> 
+                </FormGroup>
+                <FormGroup row>
+                  <Label sm={3}>New Password</Label>
+                    <Col sm={9}>
+                        <Input type="password" name="new_password" invalid={error['new_password'] ? true : false} placeholder="" autoComplete="off" defaultValue="" />
+                        <FormFeedback>{ error['new_password'] || "" }</FormFeedback>
+                    </Col> 
+                </FormGroup>
+                <Button color="primary">Save</Button>
+              </Form>
+          </Col>
+      </CardBody>
+  </Card>
+    );
+}

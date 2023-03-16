@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { UnauthorizedError, ForbiddenError, NotFoundError  } from "./pages/error";
 import { HomeIndex, HomeLayout } from "./pages/home";
-import { AuthLogin } from "./pages/auth";
+import { AuthLayout, AuthLogin, AuthSetting } from "./pages/auth";
 import { UserLayout, UserIndex, UserShow, UserEdit, UserNew } from "./pages/user";
 import { ProfileLayout, ProfileIndex, ProfileShow, ProfileForm } from "./pages/profile";
 import { PermissionLayout, PermissionIndex, PermissionShow, PermissionForm } from "./pages/permission";
@@ -61,25 +61,19 @@ export default function App() {
                     <Route path=":id/edit" element={<ProfileForm />} />
                     <Route path="new" element={<ProfileForm />} />
                   </Route>
-
-                  {/* Private profile pages */}
-                  <Route path="/permission" element={
-                    <AuthenticatedRoute>
-                      <AuthorizatedRoute>
-                        <PermissionLayout />
-                      </AuthorizatedRoute> 
-                    </AuthenticatedRoute>
-                  }>
-                    <Route index element={<PermissionIndex />} />
-                    <Route path=":id" element={<PermissionShow />} /> 
-                    <Route path=":id/edit" element={<PermissionForm />} />
-                    <Route path="new" element={<PermissionForm />} />
-                  </Route>
                   
                   {/* Public pages */}
                   <Route path="/login" element={<AuthLogin />} />
                   <Route path="/redirect" element={ <Navigate to="/login" /> } />
 
+                  <Route path="/setting" element={  
+                    <AuthenticatedRoute>
+                        <AuthLayout />
+                    </AuthenticatedRoute>
+                  }>
+                    <Route index element={<AuthSetting />} />
+                  </Route>
+                  
                   {/* Public errors pages */}
                   <Route path="/unauthorized" element={<UnauthorizedError />} />
                   <Route path="/forbidden" element={<ForbiddenError />} />
