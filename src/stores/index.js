@@ -1,4 +1,4 @@
-import { createSlice, configureStore } from '@reduxjs/toolkit';
+/*import { createSlice, configureStore } from '@reduxjs/toolkit';
 
 const sliceFormData = createSlice({
     name: 'formData',
@@ -80,4 +80,4 @@ export default configureStore({
         formError: sliceFormError.reducer
     }
 });
-
+*/

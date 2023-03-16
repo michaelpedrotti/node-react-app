@@ -8,8 +8,8 @@ import { SessionContextProvider } from "./contexts/session"
 import { AuthenticatedRoute } from "./middlewares/authentication";
 import { AuthorizatedRoute } from "./middlewares/authorization";
 import "./App.css";
-import store from './stores/index';
-import { Provider } from 'react-redux';
+// import store from './stores/index';
+// import { Provider } from 'react-redux';
 import { ErrorContextProvider } from "./contexts/error";
 
 export default function App() {
@@ -18,7 +18,7 @@ export default function App() {
   
 
   return (
-    <Provider store={store}>
+    // <Provider store={store}>
       <SessionContextProvider>
         <ErrorContextProvider>
           <BrowserRouter>
@@ -82,6 +82,6 @@ export default function App() {
           </BrowserRouter>
         </ErrorContextProvider>
       </SessionContextProvider>
-    </Provider>
+    // </Provider>
   );
 }

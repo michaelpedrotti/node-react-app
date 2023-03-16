@@ -6,6 +6,8 @@ import { ErrorContext } from "../../contexts/error";
 import AuthService from "../../services/auth";
 import Viewport from '../layout/viewport';
 import { formDataToJson } from "../abstractCrud";
+import swal from 'sweetalert';
+
 
 export function AuthLayout() {
     
@@ -145,7 +147,7 @@ export function AuthSetting(){
 
       if(res.error){
 
-        alert(res.message);   
+        swal("Danger", res.message, "danger");  
       }
       else {
 

@@ -3,6 +3,7 @@ import { Outlet, useParams, useNavigate } from "react-router-dom";
 import { Table, Row, Col, Card, CardHeader, CardBody, Collapse, Input, Pagination, PaginationItem, 
     PaginationLink,  Form, Button } from "reactstrap";
 import Viewport from '../layout/viewport';
+import swal from 'sweetalert';
 
 
 /**
@@ -89,7 +90,7 @@ export function AbstractCrudForm({ service, jsonState, baseRoute = '/user', chil
                     setJson({...jsonDefaults, ...{...res, fields }});
                 }
 
-                alert(res.message || "Error");
+                swal("Warning", res.message|| "Error", "warning");
             }
             else {
 
@@ -123,8 +124,8 @@ export function AbstractCrudForm({ service, jsonState, baseRoute = '/user', chil
                 service.edit(id, (res) => {
 
                     if(res.error){
-        
-                        alert(res.message);
+
+                        swal("Danger", res.message, "danger");
                     }
                     else {
         
@@ -138,7 +139,7 @@ export function AbstractCrudForm({ service, jsonState, baseRoute = '/user', chil
 
                     if(res.error){
         
-                        alert(res.message);
+                        swal("Danger", res.message, "danger");
                     }
 
                     setJson({...jsonDefaults, ...res});
@@ -190,7 +191,7 @@ export function AbstractCrudIndex({ service, baseRoute = '/user', children, colu
         }
         else {
 
-            alert("Select one record");  
+            swal("Record", "Select one record", "warning");
         } 
     };
     const onClickDelete = () => {
@@ -203,7 +204,7 @@ export function AbstractCrudIndex({ service, baseRoute = '/user', children, colu
 
                     if(res.error){
 
-                        alert('ERROR ' + res.message);
+                        swal("Danger", res.message, "danger");
                     }
                     else {
 
@@ -215,7 +216,7 @@ export function AbstractCrudIndex({ service, baseRoute = '/user', children, colu
         }
         else {
 
-            alert("Select one record");  
+            swal("Record", "Select one record", "warning"); 
         }
     };
     const onClickShow = () => {
@@ -226,7 +227,7 @@ export function AbstractCrudIndex({ service, baseRoute = '/user', children, colu
         }
         else {
 
-            alert("Select one record");  
+            swal("Record", "Select one record", "warning"); 
         } 
     };
     const onClickFilter = (e) => {
@@ -259,7 +260,8 @@ export function AbstractCrudIndex({ service, baseRoute = '/user', children, colu
         service.paginate(filter, (res) => {
 
             if(res.error){
-                alert(res.message);
+                
+                swal("Danger", res.message, "danger");
             }
             else {
 
