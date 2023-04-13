@@ -4,6 +4,7 @@ import { HomeIndex, HomeLayout } from "./pages/home";
 import { AuthLayout, AuthLogin, AuthSetting } from "./pages/auth";
 import { UserLayout, UserIndex, UserShow, UserForm } from "./pages/user";
 import { ProfileLayout, ProfileIndex, ProfileShow, ProfileForm } from "./pages/profile";
+import { GithubLayout, GithubIndex, GithubShow } from "./pages/github";
 import { SessionContextProvider } from "./contexts/session"
 import { AuthenticatedRoute } from "./middlewares/authentication";
 import { AuthorizatedRoute } from "./middlewares/authorization";
@@ -59,6 +60,17 @@ export default function App() {
                     <Route path=":id" element={<ProfileShow />} /> 
                     <Route path=":id/edit" element={<ProfileForm />} />
                     <Route path="new" element={<ProfileForm />} />
+                  </Route>
+
+                  <Route path="/github" element={
+                    <AuthenticatedRoute>
+                      <AuthorizatedRoute>
+                        <GithubLayout />
+                      </AuthorizatedRoute>
+                    </AuthenticatedRoute>
+                  }>
+                    <Route index element={<GithubIndex />} />
+                    <Route path=":id" element={<GithubShow />} /> 
                   </Route>
                   
                   {/* Public pages */}

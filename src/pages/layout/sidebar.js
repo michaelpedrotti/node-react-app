@@ -23,15 +23,24 @@ const SideBar = ({ isOpen }) => {
           <NavbarText style={{'backgroundColor': '#CCCCCC'}}>
               <div style={{'marginLeft': '1rem'}}>Admin</div>
           </NavbarText>
-          { permission.some(row => row.resource == 'user') && <NavItem>
+          { permission.some(row => row.resource === 'user') && <NavItem>
               <NavLink tag={Link} to={"/user"}>
                 <FontAwesomeIcon icon={faUsers} className="mr-2" /> User
               </NavLink>
             </NavItem>
           }
-          { permission.some(row => row.resource == 'profile') && <NavItem>
+          { permission.some(row => row.resource === 'profile') && <NavItem>
               <NavLink tag={Link} to={"/profile"}>
                 <FontAwesomeIcon icon={faImage} className="mr-2" /> Profile
+              </NavLink>
+            </NavItem>
+          }
+          <NavbarText style={{'backgroundColor': '#CCCCCC'}}>
+              <div style={{'marginLeft': '1rem'}}>Shaw and Partners</div>
+          </NavbarText>
+          { permission.some(row => row.resource === 'github') && <NavItem>
+              <NavLink tag={Link} to={"/github"}>
+                <FontAwesomeIcon icon={faImage} className="mr-2" /> Users
               </NavLink>
             </NavItem>
           }

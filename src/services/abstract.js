@@ -17,6 +17,8 @@ export default class AbstractService {
 
     _getURL(path = '', queryfilter = {}){
 
+        console.log('AbstractService._getURL', path, queryfilter);
+
         const query = new URLSearchParams(queryfilter).toString();
 
         return this._baseUrl + path + (query ? '?' + query : '');
