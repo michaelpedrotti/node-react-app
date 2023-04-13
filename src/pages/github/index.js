@@ -3,7 +3,7 @@ import GithubService from '../../services/github';
 import { SessionContext } from "../../contexts/session";
 import { AbstractCrudLayout } from "../abstractCrud";
 import swal from 'sweetalert';
-import { Table, Row, Col, Form,  Card, FormGroup, Label, CardBody, Button } from "reactstrap";
+import { Table, Row, Col, Form, Badge, Card, FormGroup, Label, CardBody, Button, Media, ListGroup, ListGroupItem } from "reactstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 
@@ -108,12 +108,9 @@ export function GithubShow(){
 
     const [ session ] = useContext(SessionContext);
     const service = GithubService.newInstance(session.token);
-    const state = useState({});
-    const [ data ] = state;
-
+    const [ data , setData ] = useState({});
+    const [ repos , setRepos ] = useState([]);
     const { username } = useParams();
-    const [ , setData ] = state;
-
     const navigate = useNavigate();
 
     const onClickBack = (e) => {
@@ -129,11 +126,23 @@ export function GithubShow(){
             
             if(res.error){
 
-                swal("Danger", res.message, "danger");
+                swal("Loding details", res.message, "danger");
             }
             else {
 
                 setData(res.data);
+
+                service.repos(username, (res) => {
+
+                    if(res.error){
+
+                        swal("Loding repositories", res.message, "danger");
+                    }
+                    else {
+
+                        setRepos(res.rows);
+                    }
+                });
             }
         });
 
@@ -143,8 +152,10 @@ export function GithubShow(){
 
         <Card>
             <CardBody>
-                <Col sm={8}>
+                <Row>
+                <Col sm={6}>
                     <Form>
+                    <Media object src={data['avatar_url']} style={{ maxHeight: 128, maxWidth: 128 }} alt={ data['login'] || ""} />
                         <FormGroup row>
                             <Label sm={2}>Login</Label>
                             <Col sm={10}>{ data['login'] || "" }</Col> 
@@ -153,10 +164,34 @@ export function GithubShow(){
                             <Label sm={2}>Name</Label>
                             <Col sm={10}>{ data['name'] || "" }</Col> 
                         </FormGroup>
+                        <FormGroup row>
+                            <Label sm={2}>Location</Label>
+                            <Col sm={10}>{ data['location'] || "" }</Col> 
+                        </FormGroup>
+                        <FormGroup row>
+                            <Label sm={2}>Since</Label>
+                            <Col sm={10}>{ data['created_at'] || "" }</Col> 
+                        </FormGroup>
 
                         <Button color="danger" onClick={onClickBack}>Back</Button>
                     </Form>
                 </Col>
+                <Col sm={6}>                
+                    <ListGroup>
+                        <ListGroupItem active>
+                            Repositories
+                        </ListGroupItem>
+                        { repos.map(repo => <ListGroupItem>
+                            
+                                <a href={repo.html_url} target="_blank">{repo.name}</a>
+                                <Badge color="primary" style={{marginLeft: "5px"}}>
+                                    {repo.language || "Undefined"}
+                                </Badge>   
+                            </ListGroupItem>
+                        )} 
+                        </ListGroup>
+                    </Col>
+                </Row>
             </CardBody>
         </Card>
     );
