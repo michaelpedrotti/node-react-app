@@ -15,9 +15,9 @@ export default class GithubService extends AbstractService {
         .catch(console.log)
     }
 
-    show(id = 0, callback = () => {}) {
+    show(username = '', callback = () => {}) {
 
-        fetch(this._getURL("/user/" + id), {
+        fetch(this._getURL("/api/users/" + username + "/details"), {
             method: "GET",
             headers: this._getHeaders()
         })

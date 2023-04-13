@@ -70,7 +70,7 @@ export default function App() {
                     </AuthenticatedRoute>
                   }>
                     <Route index element={<GithubIndex />} />
-                    <Route path=":id" element={<GithubShow />} /> 
+                    <Route path=":username" element={<GithubShow />} /> 
                   </Route>
                   
                   {/* Public pages */}

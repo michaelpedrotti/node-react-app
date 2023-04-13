@@ -1,11 +1,11 @@
 import { useContext, useState, useEffect } from "react";
 import GithubService from '../../services/github';
 import { SessionContext } from "../../contexts/session";
-import { AbstractCrudForm, AbstractCrudIndex, AbstractCrudLayout, AbstractCrudShow } from "../abstractCrud";
+import { AbstractCrudLayout } from "../abstractCrud";
 import swal from 'sweetalert';
-import { Table, Row, Col,  Card, FormGroup, Label, CardHeader, CardBody, Collapse, Input, Pagination, PaginationItem, 
-    PaginationLink,  Form, FormFeedback, Button } from "reactstrap";
-import { Link } from "react-router-dom";
+import { Table, Row, Col, Form,  Card, FormGroup, Label, CardBody, Button } from "reactstrap";
+import { Link, useNavigate, useParams } from "react-router-dom";
+
 
 /**
  * @param {React.HTMLAttributes} props
@@ -51,8 +51,6 @@ export function GithubIndex(){
                     }
 
                     setFilter(obj);
-
-                    console.log('filter', filter);
                     setDisabled(false);
                 }
                 else {
@@ -82,8 +80,8 @@ export function GithubIndex(){
                         </thead>
                         <tbody>
                             { rows.map(row => <tr key={`github-row-${row['id']}`}>
-                                    <td >{ row.id }</td>
-                                    <td >{ row.login }</td>
+                                    <td>{ row.id }</td>
+                                    <td><Link to={`/github/${row.login}`} >{ row.login }</Link></td>
                                 </tr>
                             )}
                         </tbody>
@@ -113,18 +111,53 @@ export function GithubShow(){
     const state = useState({});
     const [ data ] = state;
 
-    return  <AbstractCrudShow service={service} state={state} baseRoute="/user">
-        <FormGroup row>
-            <Label sm={2}>E-mail</Label>
-            <Col sm={10}>{ data['email'] || "" }</Col> 
-        </FormGroup>
-        <FormGroup row>
-            <Label sm={2}>Name</Label>
-            <Col sm={10}>{ data['name'] || "" }</Col> 
-        </FormGroup>
-        <FormGroup row>
-            <Label sm={2}>Profile</Label>
-            <Col sm={10}>{ data?.profile?.name || "" }</Col> 
-        </FormGroup>
-    </AbstractCrudShow>;
+    const { username } = useParams();
+    const [ , setData ] = state;
+
+    const navigate = useNavigate();
+
+    const onClickBack = (e) => {
+        
+        e.preventDefault();
+
+        navigate("/github");  
+    };
+
+    useEffect(() => {
+
+        service.show(username, (res) => {
+            
+            if(res.error){
+
+                swal("Danger", res.message, "danger");
+            }
+            else {
+
+                setData(res.data);
+            }
+        });
+
+    }, []);
+
+    return(
+
+        <Card>
+            <CardBody>
+                <Col sm={8}>
+                    <Form>
+                        <FormGroup row>
+                            <Label sm={2}>Login</Label>
+                            <Col sm={10}>{ data['login'] || "" }</Col> 
+                        </FormGroup>
+                        <FormGroup row>
+                            <Label sm={2}>Name</Label>
+                            <Col sm={10}>{ data['name'] || "" }</Col> 
+                        </FormGroup>
+
+                        <Button color="danger" onClick={onClickBack}>Back</Button>
+                    </Form>
+                </Col>
+            </CardBody>
+        </Card>
+    );
 }
