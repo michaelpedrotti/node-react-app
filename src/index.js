@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import App from './App';
 
-process.env.HOST_API = 'http://localhost:8080'
+// process.env.HOST_API = 'http://localhost:8080'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
