@@ -2,7 +2,7 @@ export default class AbstractService {
 
     constructor(token = null){
         this._token = token;
-        this._baseUrl = process.env.HOST_API || 'http://sp-api-kion.onrender.com';
+        this._baseUrl = process.env.HOST_API || 'https://sp-api-kion.onrender.com';
     }
 
     /**
